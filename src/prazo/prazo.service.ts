@@ -7,8 +7,11 @@ import { UpdatePrazoDto } from './dto/update-prazo.dto';
 export class PrazoService {
   constructor(private readonly db: Database) {}
 
-  create(createPrazoDto: CreatePrazoDto) {
-    return this.db.prazo.create({ data: createPrazoDto });
+  async create(createPrazoDto: CreatePrazoDto) {
+    const prazo = await this.db.prazo.create({ data: createPrazoDto });
+    return {
+      message: `Condição "${prazo.condicao}" criada com sucesso!!!`,
+    };
   }
 
   findAll() {
