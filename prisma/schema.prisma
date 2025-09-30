@@ -3,12 +3,12 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
 model Prazo {
-  ncond String @id @map("_id")
+  ncond Int @id @default(autoincrement())
 
   // Condição de pagamento (ex.: "21/28/35", "A VISTA", "ORCAMENTO", "CONSIGNADO", pode conter "<G>")
   condicao  String
