@@ -1,0 +1,26 @@
+
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+
+model Prazo {
+  ncond        String   @id @map("_id")
+  condicao     String
+  acrescimo    Float    @default(0)
+  desconto     Float    @default(0)
+  prazoMedio   Int      @default(0)
+  valorMinimo  Float    @default(0)
+  usaCaixa     Boolean  @default(true)
+  modosPagto   String[] @default([])
+  diasVencto   Int[]    @default([])
+  tipo         String?
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
