@@ -1,5 +1,3 @@
-
-
 generator client {
   provider = "prisma-client-js"
 }
@@ -9,18 +7,39 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-
 model Prazo {
-  ncond        String   @id @map("_id")
-  condicao     String
-  acrescimo    Float    @default(0)
-  desconto     Float    @default(0)
-  prazoMedio   Int      @default(0)
-  valorMinimo  Float    @default(0)
-  usaCaixa     Boolean  @default(true)
-  modosPagto   String[] @default([])
-  diasVencto   Int[]    @default([])
-  tipo         String?
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+  ncond String @id @map("_id")
+
+  // Condição de pagamento (ex.: "21/28/35", "A VISTA", "ORCAMENTO", "CONSIGNADO", pode conter "<G>")
+  condicao  String
+  acrescimo Float?
+  desconto  Float?
+
+  // Campos opcionais conforme documentação
+  prazoMedio  Int? // exemplo: 28
+  valorMinimo Float?
+  usaCaixa    String? // 'S' ou 'N' (padrão doc). Ex.: "S"
+  modosPagto  String? // Códigos separados por ';' (ex.: "01;03;07")
+
+  // Série de vencimentos (cada um opcional)
+  diasVencto1  Int?
+  diasVencto2  Int?
+  diasVencto3  Int?
+  diasVencto4  Int?
+  diasVencto5  Int?
+  diasVencto6  Int?
+  diasVencto7  Int?
+  diasVencto8  Int?
+  diasVencto9  Int?
+  diasVencto10 Int?
+  diasVencto11 Int?
+  diasVencto12 Int?
+
+  // Tipo opcional (doc diz 1 ou 2)
+  tipo String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("CADTPG")
 }
