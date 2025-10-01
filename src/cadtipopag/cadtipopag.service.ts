@@ -20,7 +20,8 @@ export class CadtipopagService {
   async create(createCadtipopagDto: CreateCadtipopagDto) {
     const tipo = await this.db.cadtipopag.create({ data: createCadtipopagDto });
     return {
-      message: `Tipo de pagamento "${tipo.descricao}" criado com sucesso!!!`,
+      message: `Tipo de pagamento "${tipo.descricao}" criado com sucesso (código ${tipo.codigo}).`,
+      id: tipo.codigo,
     };
   }
 
@@ -45,7 +46,8 @@ export class CadtipopagService {
         data: updateCadtipopagDto,
       });
       return {
-        message: `Tipo de pagamento "${tipo.descricao}" atualizado com sucesso!!!`,
+        message: `Tipo de pagamento "${tipo.descricao}" atualizado com sucesso (código ${tipo.codigo}).`,
+        id: tipo.codigo,
       };
     } catch (error) {
       return this.ensureExists(id, error);
@@ -56,7 +58,8 @@ export class CadtipopagService {
     try {
       const tipo = await this.db.cadtipopag.delete({ where: { codigo: id } });
       return {
-        message: `Tipo de pagamento "${tipo.descricao}" removido com sucesso!!!`,
+        message: `Tipo de pagamento "${tipo.descricao}" removido com sucesso (código ${tipo.codigo}).`,
+        id: tipo.codigo,
       };
     } catch (error) {
       return this.ensureExists(id, error);
