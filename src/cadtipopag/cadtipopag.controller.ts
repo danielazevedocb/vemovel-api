@@ -1,4 +1,13 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { CadtipopagService } from './cadtipopag.service';
 import { CreateCadtipopagDto } from './dto/create-cadtipopag.dto';
 import { UpdateCadtipopagDto } from './dto/update-cadtipopag.dto';
@@ -18,17 +27,20 @@ export class CadtipopagController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.cadtipopagService.findOne(+id);
+  findOne(@Param('id', ParseIntPipe) id: number) {
+    return this.cadtipopagService.findOne(id);
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateCadtipopagDto: UpdateCadtipopagDto) {
-    return this.cadtipopagService.update(+id, updateCadtipopagDto);
+  update(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() updateCadtipopagDto: UpdateCadtipopagDto,
+  ) {
+    return this.cadtipopagService.update(id, updateCadtipopagDto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.cadtipopagService.remove(+id);
+  remove(@Param('id', ParseIntPipe) id: number) {
+    return this.cadtipopagService.remove(id);
   }
 }

@@ -1,0 +1,9 @@
+-- CreateTable
+CREATE TABLE "CADTIPOPAG" (
+    "codigo" SERIAL NOT NULL,
+    "descricao" TEXT NOT NULL,
+    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updatedAt" TIMESTAMP(3) NOT NULL,
+
+    CONSTRAINT "CADTIPOPAG_pkey" PRIMARY KEY ("codigo")
+);

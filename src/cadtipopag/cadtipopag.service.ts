@@ -1,26 +1,65 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Database } from 'src/db/database';
 import { CreateCadtipopagDto } from './dto/create-cadtipopag.dto';
 import { UpdateCadtipopagDto } from './dto/update-cadtipopag.dto';
 
 @Injectable()
 export class CadtipopagService {
-  create(createCadtipopagDto: CreateCadtipopagDto) {
-    return 'This action adds a new cadtipopag';
+  constructor(private readonly db: Database) {}
+
+  private async ensureExists(id: number, error: unknown): Promise<never> {
+    const tipo = await this.db.cadtipopag.findUnique({ where: { codigo: id } });
+    if (!tipo) {
+      throw new NotFoundException(
+        `Tipo de pagamento com código ${id} não encontrado.`,
+      );
+    }
+    throw error;
+  }
+
+  async create(createCadtipopagDto: CreateCadtipopagDto) {
+    const tipo = await this.db.cadtipopag.create({ data: createCadtipopagDto });
+    return {
+      message: `Tipo de pagamento "${tipo.descricao}" criado com sucesso!!!`,
+    };
   }
 
   findAll() {
-    return `This action returns all cadtipopag`;
+    return this.db.cadtipopag.findMany();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} cadtipopag`;
+  async findOne(id: number) {
+    const tipo = await this.db.cadtipopag.findUnique({ where: { codigo: id } });
+    if (!tipo) {
+      throw new NotFoundException(
+        `Tipo de pagamento com código ${id} não encontrado.`,
+      );
+    }
+    return tipo;
   }
 
-  update(id: number, updateCadtipopagDto: UpdateCadtipopagDto) {
-    return `This action updates a #${id} cadtipopag`;
+  async update(id: number, updateCadtipopagDto: UpdateCadtipopagDto) {
+    try {
+      const tipo = await this.db.cadtipopag.update({
+        where: { codigo: id },
+        data: updateCadtipopagDto,
+      });
+      return {
+        message: `Tipo de pagamento "${tipo.descricao}" atualizado com sucesso!!!`,
+      };
+    } catch (error) {
+      return this.ensureExists(id, error);
+    }
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} cadtipopag`;
+  async remove(id: number) {
+    try {
+      const tipo = await this.db.cadtipopag.delete({ where: { codigo: id } });
+      return {
+        message: `Tipo de pagamento "${tipo.descricao}" removido com sucesso!!!`,
+      };
+    } catch (error) {
+      return this.ensureExists(id, error);
+    }
   }
 }

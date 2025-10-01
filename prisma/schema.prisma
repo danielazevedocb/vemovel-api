@@ -43,3 +43,13 @@ model Prazo {
 
   @@map("CADTPG")
 }
+
+model Cadtipopag {
+  codigo    Int    @id @default(autoincrement())
+  descricao String
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("CADTIPOPAG")
+}
