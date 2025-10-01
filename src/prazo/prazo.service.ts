@@ -7,6 +7,14 @@ import { UpdatePrazoDto } from './dto/update-prazo.dto';
 export class PrazoService {
   constructor(private readonly db: Database) {}
 
+  private async ensureExists(id: number, error: unknown): Promise<never> {
+    const prazo = await this.db.prazo.findUnique({ where: { ncond: id } });
+    if (!prazo) {
+      throw new NotFoundException(`Prazo com código ${id} não encontrado.`);
+    }
+    throw error;
+  }
+
   async create(createPrazoDto: CreatePrazoDto) {
     const prazo = await this.db.prazo.create({ data: createPrazoDto });
     return {
@@ -28,10 +36,13 @@ export class PrazoService {
 
   async update(id: number, updatePrazoDto: UpdatePrazoDto) {
     try {
-      return await this.db.prazo.update({
+      const prazo = await this.db.prazo.update({
         where: { ncond: id },
         data: updatePrazoDto,
       });
+      return {
+        message: `Condição "${prazo.condicao}" atualizada com sucesso!!!`,
+      };
     } catch (error) {
       return this.ensureExists(id, error);
     }
@@ -39,17 +50,12 @@ export class PrazoService {
 
   async remove(id: number) {
     try {
-      return await this.db.prazo.delete({ where: { ncond: id } });
+      const prazo = await this.db.prazo.delete({ where: { ncond: id } });
+      return {
+        message: `Condição "${prazo.condicao}" removida com sucesso!!!`,
+      };
     } catch (error) {
       return this.ensureExists(id, error);
     }
-  }
-
-  private async ensureExists(id: number, error: unknown): Promise<never> {
-    const prazo = await this.db.prazo.findUnique({ where: { ncond: id } });
-    if (!prazo) {
-      throw new NotFoundException(`Prazo com código ${id} não encontrado.`);
-    }
-    throw error;
   }
 }
