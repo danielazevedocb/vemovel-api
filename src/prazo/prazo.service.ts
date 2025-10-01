@@ -18,8 +18,7 @@ export class PrazoService {
   async create(createPrazoDto: CreatePrazoDto) {
     const prazo = await this.db.prazo.create({ data: createPrazoDto });
     return {
-      message: `Condição "${prazo.condicao}" criada com sucesso (código ${prazo.ncond}).`,
-      id: prazo.ncond,
+      message: `Condição "${prazo.condicao}" criada com sucesso!!!`,
     };
   }
 
@@ -42,8 +41,7 @@ export class PrazoService {
         data: updatePrazoDto,
       });
       return {
-        message: `Condição "${prazo.condicao}" atualizada com sucesso (código ${prazo.ncond}).`,
-        id: prazo.ncond,
+        message: `Condição "${prazo.condicao}" atualizada com sucesso!!!`,
       };
     } catch (error) {
       return this.ensureExists(id, error);
@@ -54,8 +52,7 @@ export class PrazoService {
     try {
       const prazo = await this.db.prazo.delete({ where: { ncond: id } });
       return {
-        message: `Condição "${prazo.condicao}" removida com sucesso (código ${prazo.ncond}).`,
-        id: prazo.ncond,
+        message: `Condição "${prazo.condicao}" removida com sucesso!!!`,
       };
     } catch (error) {
       return this.ensureExists(id, error);

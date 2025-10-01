@@ -29,9 +29,12 @@ export class PrazoController {
   @ApiCreatedResponse({
     description: 'Condição criada com sucesso',
     schema: {
-      example: {
-        message: 'Condição "À vista" criada com sucesso (código 1).',
-        id: 1,
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Condição "À vista" criada com sucesso!!!',
+        },
       },
     },
   })
@@ -41,15 +44,54 @@ export class PrazoController {
 
   @Get()
   @ApiOperation({ summary: 'Listar condições de pagamento' })
-  @ApiOkResponse({ description: 'Lista de condições cadastradas' })
+  @ApiOkResponse({
+    description: 'Lista de condições cadastradas',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          ncond: { type: 'integer', example: 1 },
+          condicao: { type: 'string', example: 'À vista' },
+          acrescimo: { type: 'number', nullable: true, example: null },
+          desconto: { type: 'number', nullable: true, example: null },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+        additionalProperties: true,
+      },
+    },
+  })
   findAll() {
     return this.prazoService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Buscar condição de pagamento por código' })
-  @ApiOkResponse({ description: 'Condição encontrada' })
-  @ApiNotFoundResponse({ description: 'Condição não encontrada' })
+  @ApiOkResponse({
+    description: 'Condição encontrada',
+    schema: {
+      type: 'object',
+      properties: {
+        ncond: { type: 'integer', example: 1 },
+        condicao: { type: 'string', example: 'À vista' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
+      },
+      additionalProperties: true,
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Condição não encontrada',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 404 },
+        message: { type: 'string', example: 'Prazo com código 99 não encontrado.' },
+        error: { type: 'string', example: 'Not Found' },
+      },
+    },
+  })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.prazoService.findOne(id);
   }
@@ -59,13 +101,26 @@ export class PrazoController {
   @ApiOkResponse({
     description: 'Condição atualizada com sucesso',
     schema: {
-      example: {
-        message: 'Condição "À vista" atualizada com sucesso (código 1).',
-        id: 1,
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Condição "À vista" atualizada com sucesso!!!',
+        },
       },
     },
   })
-  @ApiNotFoundResponse({ description: 'Condição não encontrada' })
+  @ApiNotFoundResponse({
+    description: 'Condição não encontrada',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 404 },
+        message: { type: 'string', example: 'Prazo com código 99 não encontrado.' },
+        error: { type: 'string', example: 'Not Found' },
+      },
+    },
+  })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePrazoDto: UpdatePrazoDto,
@@ -78,13 +133,26 @@ export class PrazoController {
   @ApiOkResponse({
     description: 'Condição removida com sucesso',
     schema: {
-      example: {
-        message: 'Condição "À vista" removida com sucesso (código 1).',
-        id: 1,
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Condição "À vista" removida com sucesso!!!',
+        },
       },
     },
   })
-  @ApiNotFoundResponse({ description: 'Condição não encontrada' })
+  @ApiNotFoundResponse({
+    description: 'Condição não encontrada',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 404 },
+        message: { type: 'string', example: 'Prazo com código 99 não encontrado.' },
+        error: { type: 'string', example: 'Not Found' },
+      },
+    },
+  })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.prazoService.remove(id);
   }

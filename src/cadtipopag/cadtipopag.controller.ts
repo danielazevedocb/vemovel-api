@@ -29,9 +29,12 @@ export class CadtipopagController {
   @ApiCreatedResponse({
     description: 'Tipo de pagamento criado com sucesso',
     schema: {
-      example: {
-        message: 'Tipo de pagamento "Cartão" criado com sucesso (código 1).',
-        id: 1,
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Tipo de pagamento "Cartão" criado com sucesso!!!',
+        },
       },
     },
   })
@@ -41,15 +44,55 @@ export class CadtipopagController {
 
   @Get()
   @ApiOperation({ summary: 'Listar tipos de pagamento' })
-  @ApiOkResponse({ description: 'Lista de tipos de pagamento cadastrados' })
+  @ApiOkResponse({
+    description: 'Lista de tipos de pagamento cadastrados',
+    schema: {
+      type: 'array',
+      items: {
+        type: 'object',
+        properties: {
+          codigo: { type: 'integer', example: 1 },
+          descricao: { type: 'string', example: 'Cartão de crédito' },
+          createdAt: { type: 'string', format: 'date-time' },
+          updatedAt: { type: 'string', format: 'date-time' },
+        },
+        additionalProperties: true,
+      },
+    },
+  })
   findAll() {
     return this.cadtipopagService.findAll();
   }
 
   @Get(':id')
   @ApiOperation({ summary: 'Buscar um tipo de pagamento' })
-  @ApiOkResponse({ description: 'Tipo de pagamento encontrado' })
-  @ApiNotFoundResponse({ description: 'Tipo de pagamento não encontrado' })
+  @ApiOkResponse({
+    description: 'Tipo de pagamento encontrado',
+    schema: {
+      type: 'object',
+      properties: {
+        codigo: { type: 'integer', example: 1 },
+        descricao: { type: 'string', example: 'Cartão de crédito' },
+        createdAt: { type: 'string', format: 'date-time' },
+        updatedAt: { type: 'string', format: 'date-time' },
+      },
+      additionalProperties: true,
+    },
+  })
+  @ApiNotFoundResponse({
+    description: 'Tipo de pagamento não encontrado',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 404 },
+        message: {
+          type: 'string',
+          example: 'Tipo de pagamento com código 99 não encontrado.',
+        },
+        error: { type: 'string', example: 'Not Found' },
+      },
+    },
+  })
   findOne(@Param('id', ParseIntPipe) id: number) {
     return this.cadtipopagService.findOne(id);
   }
@@ -59,13 +102,29 @@ export class CadtipopagController {
   @ApiOkResponse({
     description: 'Tipo de pagamento atualizado com sucesso',
     schema: {
-      example: {
-        message: 'Tipo de pagamento "Cartão" atualizado com sucesso (código 1).',
-        id: 1,
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Tipo de pagamento "Cartão" atualizado com sucesso!!!',
+        },
       },
     },
   })
-  @ApiNotFoundResponse({ description: 'Tipo de pagamento não encontrado' })
+  @ApiNotFoundResponse({
+    description: 'Tipo de pagamento não encontrado',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 404 },
+        message: {
+          type: 'string',
+          example: 'Tipo de pagamento com código 99 não encontrado.',
+        },
+        error: { type: 'string', example: 'Not Found' },
+      },
+    },
+  })
   update(
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCadtipopagDto: UpdateCadtipopagDto,
@@ -78,13 +137,29 @@ export class CadtipopagController {
   @ApiOkResponse({
     description: 'Tipo de pagamento removido com sucesso',
     schema: {
-      example: {
-        message: 'Tipo de pagamento "Cartão" removido com sucesso (código 1).',
-        id: 1,
+      type: 'object',
+      properties: {
+        message: {
+          type: 'string',
+          example: 'Tipo de pagamento "Cartão" removido com sucesso!!!',
+        },
       },
     },
   })
-  @ApiNotFoundResponse({ description: 'Tipo de pagamento não encontrado' })
+  @ApiNotFoundResponse({
+    description: 'Tipo de pagamento não encontrado',
+    schema: {
+      type: 'object',
+      properties: {
+        statusCode: { type: 'number', example: 404 },
+        message: {
+          type: 'string',
+          example: 'Tipo de pagamento com código 99 não encontrado.',
+        },
+        error: { type: 'string', example: 'Not Found' },
+      },
+    },
+  })
   remove(@Param('id', ParseIntPipe) id: number) {
     return this.cadtipopagService.remove(id);
   }
