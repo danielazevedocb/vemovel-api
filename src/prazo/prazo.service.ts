@@ -7,55 +7,63 @@ import { UpdatePrazoDto } from './dto/update-prazo.dto';
 export class PrazoService {
   constructor(private readonly db: Database) {}
 
-  private async ensureExists(id: number, error: unknown): Promise<never> {
-    const prazo = await this.db.prazo.findUnique({ where: { ncond: id } });
-    if (!prazo) {
-      throw new NotFoundException(`Prazo com código ${id} não encontrado.`);
+  private async ensureEmpresaExists(empresaId: number): Promise<void> {
+    const empresa = await this.db.empresa.findUnique({
+      where: { id: empresaId },
+    });
+    if (!empresa) {
+      throw new NotFoundException(
+        `Empresa com código ${empresaId} não encontrada.`,
+      );
     }
-    throw error;
   }
 
-  async create(createPrazoDto: CreatePrazoDto) {
-    const prazo = await this.db.prazo.create({ data: createPrazoDto });
-    return {
-      message: `Condição "${prazo.condicao}" criada com sucesso!!!`,
-    };
-  }
-
-  findAll() {
-    return this.db.prazo.findMany();
-  }
-
-  async findOne(id: number) {
+  private async findOwnedPrazoOrThrow(empresaId: number, id: number) {
     const prazo = await this.db.prazo.findUnique({ where: { ncond: id } });
-    if (!prazo) {
+    if (!prazo || prazo.empresaId !== empresaId) {
       throw new NotFoundException(`Prazo com código ${id} não encontrado.`);
     }
     return prazo;
   }
 
-  async update(id: number, updatePrazoDto: UpdatePrazoDto) {
-    try {
-      const prazo = await this.db.prazo.update({
-        where: { ncond: id },
-        data: updatePrazoDto,
-      });
-      return {
-        message: `Condição "${prazo.condicao}" atualizada com sucesso!!!`,
-      };
-    } catch (error) {
-      return this.ensureExists(id, error);
-    }
+  async create(empresaId: number, createPrazoDto: CreatePrazoDto) {
+    await this.ensureEmpresaExists(empresaId);
+    const prazo = await this.db.prazo.create({
+      data: {
+        ...createPrazoDto,
+        empresaId,
+      },
+    });
+    return {
+      message: `Condição "${prazo.condicao}" criada com sucesso!!!`,
+    };
   }
 
-  async remove(id: number) {
-    try {
-      const prazo = await this.db.prazo.delete({ where: { ncond: id } });
-      return {
-        message: `Condição "${prazo.condicao}" removida com sucesso!!!`,
-      };
-    } catch (error) {
-      return this.ensureExists(id, error);
-    }
+  async findAll(empresaId: number) {
+    await this.ensureEmpresaExists(empresaId);
+    return this.db.prazo.findMany({ where: { empresaId } });
+  }
+
+  async findOne(empresaId: number, id: number) {
+    return this.findOwnedPrazoOrThrow(empresaId, id);
+  }
+
+  async update(empresaId: number, id: number, updatePrazoDto: UpdatePrazoDto) {
+    await this.findOwnedPrazoOrThrow(empresaId, id);
+    const prazo = await this.db.prazo.update({
+      where: { ncond: id },
+      data: updatePrazoDto,
+    });
+    return {
+      message: `Condição "${prazo.condicao}" atualizada com sucesso!!!`,
+    };
+  }
+
+  async remove(empresaId: number, id: number) {
+    const prazo = await this.findOwnedPrazoOrThrow(empresaId, id);
+    await this.db.prazo.delete({ where: { ncond: id } });
+    return {
+      message: `Condição "${prazo.condicao}" removida com sucesso!!!`,
+    };
   }
 }

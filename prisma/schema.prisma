@@ -15,6 +15,9 @@ model Prazo {
   acrescimo Float?
   desconto  Float?
 
+  empresaId Int
+  empresa   Empresa @relation(fields: [empresaId], references: [id])
+
   // Campos opcionais conforme documentação
   prazoMedio  Int? // exemplo: 28
   valorMinimo Float?
@@ -41,6 +44,8 @@ model Prazo {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([empresaId, condicao], name: "prazo_condicao_empresa_unique")
+  @@index([empresaId], map: "prazo_empresa_idx")
   @@map("CADTPG")
 }
 
@@ -48,8 +53,27 @@ model Cadtipopag {
   codigo    Int    @id @default(autoincrement())
   descricao String
 
+  empresaId Int
+  empresa   Empresa @relation(fields: [empresaId], references: [id])
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([empresaId, descricao], name: "cadtipopag_descricao_empresa_unique")
+  @@index([empresaId], map: "cadtipopag_empresa_idx")
   @@map("CADTIPOPAG")
+}
+
+model Empresa {
+  id   Int    @id @default(autoincrement())
+  nome String
+  cnpj String? @unique
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  prazos      Prazo[]
+  cadtipopags Cadtipopag[]
+
+  @@map("EMPRESA")
 }

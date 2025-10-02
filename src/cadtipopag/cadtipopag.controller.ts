@@ -10,16 +10,25 @@ import {
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
+  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { EmpresaId } from 'src/common/decorators/empresa-id.decorator';
 import { CadtipopagService } from './cadtipopag.service';
 import { CreateCadtipopagDto } from './dto/create-cadtipopag.dto';
 import { UpdateCadtipopagDto } from './dto/update-cadtipopag.dto';
 
 @ApiTags('Cadtipopag')
+@ApiHeader({
+  name: 'x-empresa-id',
+  description:
+    'Identificador numérico da empresa na qual a operação será executada.',
+  required: true,
+  schema: { type: 'integer', minimum: 1 },
+})
 @Controller('cadtipopag')
 export class CadtipopagController {
   constructor(private readonly cadtipopagService: CadtipopagService) {}
@@ -38,8 +47,11 @@ export class CadtipopagController {
       },
     },
   })
-  create(@Body() createCadtipopagDto: CreateCadtipopagDto) {
-    return this.cadtipopagService.create(createCadtipopagDto);
+  create(
+    @EmpresaId() empresaId: number,
+    @Body() createCadtipopagDto: CreateCadtipopagDto,
+  ) {
+    return this.cadtipopagService.create(empresaId, createCadtipopagDto);
   }
 
   @Get()
@@ -60,8 +72,8 @@ export class CadtipopagController {
       },
     },
   })
-  findAll() {
-    return this.cadtipopagService.findAll();
+  findAll(@EmpresaId() empresaId: number) {
+    return this.cadtipopagService.findAll(empresaId);
   }
 
   @Get(':id')
@@ -93,8 +105,11 @@ export class CadtipopagController {
       },
     },
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.cadtipopagService.findOne(id);
+  findOne(
+    @EmpresaId() empresaId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.cadtipopagService.findOne(empresaId, id);
   }
 
   @Patch(':id')
@@ -126,10 +141,11 @@ export class CadtipopagController {
     },
   })
   update(
+    @EmpresaId() empresaId: number,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCadtipopagDto: UpdateCadtipopagDto,
   ) {
-    return this.cadtipopagService.update(id, updateCadtipopagDto);
+    return this.cadtipopagService.update(empresaId, id, updateCadtipopagDto);
   }
 
   @Delete(':id')
@@ -160,7 +176,10 @@ export class CadtipopagController {
       },
     },
   })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.cadtipopagService.remove(id);
+  remove(
+    @EmpresaId() empresaId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.cadtipopagService.remove(empresaId, id);
   }
 }

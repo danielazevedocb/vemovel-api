@@ -10,16 +10,25 @@ import {
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
+  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
+import { EmpresaId } from 'src/common/decorators/empresa-id.decorator';
 import { CreatePrazoDto } from './dto/create-prazo.dto';
 import { UpdatePrazoDto } from './dto/update-prazo.dto';
 import { PrazoService } from './prazo.service';
 
 @ApiTags('Prazo')
+@ApiHeader({
+  name: 'x-empresa-id',
+  description:
+    'Identificador numérico da empresa na qual a operação será executada.',
+  required: true,
+  schema: { type: 'integer', minimum: 1 },
+})
 @Controller('prazo')
 export class PrazoController {
   constructor(private readonly prazoService: PrazoService) {}
@@ -38,8 +47,11 @@ export class PrazoController {
       },
     },
   })
-  create(@Body() createPrazoDto: CreatePrazoDto) {
-    return this.prazoService.create(createPrazoDto);
+  create(
+    @EmpresaId() empresaId: number,
+    @Body() createPrazoDto: CreatePrazoDto,
+  ) {
+    return this.prazoService.create(empresaId, createPrazoDto);
   }
 
   @Get()
@@ -62,8 +74,8 @@ export class PrazoController {
       },
     },
   })
-  findAll() {
-    return this.prazoService.findAll();
+  findAll(@EmpresaId() empresaId: number) {
+    return this.prazoService.findAll(empresaId);
   }
 
   @Get(':id')
@@ -87,13 +99,19 @@ export class PrazoController {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 404 },
-        message: { type: 'string', example: 'Prazo com código 99 não encontrado.' },
+        message: {
+          type: 'string',
+          example: 'Prazo com código 99 não encontrado.',
+        },
         error: { type: 'string', example: 'Not Found' },
       },
     },
   })
-  findOne(@Param('id', ParseIntPipe) id: number) {
-    return this.prazoService.findOne(id);
+  findOne(
+    @EmpresaId() empresaId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.prazoService.findOne(empresaId, id);
   }
 
   @Patch(':id')
@@ -116,16 +134,20 @@ export class PrazoController {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 404 },
-        message: { type: 'string', example: 'Prazo com código 99 não encontrado.' },
+        message: {
+          type: 'string',
+          example: 'Prazo com código 99 não encontrado.',
+        },
         error: { type: 'string', example: 'Not Found' },
       },
     },
   })
   update(
+    @EmpresaId() empresaId: number,
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePrazoDto: UpdatePrazoDto,
   ) {
-    return this.prazoService.update(id, updatePrazoDto);
+    return this.prazoService.update(empresaId, id, updatePrazoDto);
   }
 
   @Delete(':id')
@@ -148,12 +170,18 @@ export class PrazoController {
       type: 'object',
       properties: {
         statusCode: { type: 'number', example: 404 },
-        message: { type: 'string', example: 'Prazo com código 99 não encontrado.' },
+        message: {
+          type: 'string',
+          example: 'Prazo com código 99 não encontrado.',
+        },
         error: { type: 'string', example: 'Not Found' },
       },
     },
   })
-  remove(@Param('id', ParseIntPipe) id: number) {
-    return this.prazoService.remove(id);
+  remove(
+    @EmpresaId() empresaId: number,
+    @Param('id', ParseIntPipe) id: number,
+  ) {
+    return this.prazoService.remove(empresaId, id);
   }
 }

@@ -10,7 +10,10 @@ import {
 } from 'class-validator';
 
 export class CreatePrazoDto {
-  @ApiProperty({ description: 'Descrição da condição de pagamento', example: 'À vista' })
+  @ApiProperty({
+    description: 'Descrição da condição de pagamento',
+    example: 'À vista',
+  })
   @IsString()
   @IsNotEmpty()
   @Transform(({ value }) =>
@@ -36,36 +39,54 @@ export class CreatePrazoDto {
   @IsInt()
   prazoMedio?: number;
 
-  @ApiPropertyOptional({ description: 'Valor mínimo permitido para a condição', example: 100 })
+  @ApiPropertyOptional({
+    description: 'Valor mínimo permitido para a condição',
+    example: 100,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsNumber()
   valorMinimo?: number;
 
-  @ApiPropertyOptional({ description: 'Indica se usa caixa (S ou N)', example: 'S' })
+  @ApiPropertyOptional({
+    description: 'Indica se usa caixa (S ou N)',
+    example: 'S',
+  })
   @IsOptional()
   @IsString()
   @IsIn(['S', 'N'])
   usaCaixa?: string;
 
-  @ApiPropertyOptional({ description: 'Modos de pagamento separados por ponto e vírgula', example: '01;03;07' })
+  @ApiPropertyOptional({
+    description: 'Modos de pagamento separados por ponto e vírgula',
+    example: '01;03;07',
+  })
   @IsOptional()
   @IsString()
   modosPagto?: string;
 
-  @ApiPropertyOptional({ description: 'Dias para o 1º vencimento', example: 30 })
+  @ApiPropertyOptional({
+    description: 'Dias para o 1º vencimento',
+    example: 30,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   diasVencto1?: number;
 
-  @ApiPropertyOptional({ description: 'Dias para o 2º vencimento', example: 60 })
+  @ApiPropertyOptional({
+    description: 'Dias para o 2º vencimento',
+    example: 60,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
   diasVencto2?: number;
 
-  @ApiPropertyOptional({ description: 'Dias para o 3º vencimento', example: 90 })
+  @ApiPropertyOptional({
+    description: 'Dias para o 3º vencimento',
+    example: 90,
+  })
   @IsOptional()
   @Type(() => Number)
   @IsInt()
@@ -125,7 +146,10 @@ export class CreatePrazoDto {
   @IsInt()
   diasVencto12?: number;
 
-  @ApiPropertyOptional({ description: 'Tipo da condição (1 ou 2)', example: '1' })
+  @ApiPropertyOptional({
+    description: 'Tipo da condição (1 ou 2)',
+    example: '1',
+  })
   @IsOptional()
   @IsString()
   @IsIn(['1', '2'])
