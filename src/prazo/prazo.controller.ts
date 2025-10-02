@@ -10,26 +10,23 @@ import {
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
-  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { EmpresaId } from 'src/common/decorators/empresa-id.decorator';
 import { CreatePrazoDto } from './dto/create-prazo.dto';
 import { UpdatePrazoDto } from './dto/update-prazo.dto';
 import { PrazoService } from './prazo.service';
 
 @ApiTags('Prazo')
-@ApiHeader({
-  name: 'x-empresa-id',
-  description:
-    'Identificador numérico da empresa na qual a operação será executada.',
-  required: true,
-  schema: { type: 'integer', minimum: 1 },
+@ApiParam({
+  name: 'empresaId',
+  description: 'Identificador da empresa',
+  type: Number,
 })
-@Controller('prazo')
+@Controller('empresas/:empresaId/prazo')
 export class PrazoController {
   constructor(private readonly prazoService: PrazoService) {}
 
@@ -48,7 +45,7 @@ export class PrazoController {
     },
   })
   create(
-    @EmpresaId() empresaId: number,
+    @Param('empresaId', ParseIntPipe) empresaId: number,
     @Body() createPrazoDto: CreatePrazoDto,
   ) {
     return this.prazoService.create(empresaId, createPrazoDto);
@@ -74,7 +71,7 @@ export class PrazoController {
       },
     },
   })
-  findAll(@EmpresaId() empresaId: number) {
+  findAll(@Param('empresaId', ParseIntPipe) empresaId: number) {
     return this.prazoService.findAll(empresaId);
   }
 
@@ -107,8 +104,13 @@ export class PrazoController {
       },
     },
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Código interno da condição de pagamento',
+    type: Number,
+  })
   findOne(
-    @EmpresaId() empresaId: number,
+    @Param('empresaId', ParseIntPipe) empresaId: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
     return this.prazoService.findOne(empresaId, id);
@@ -142,8 +144,13 @@ export class PrazoController {
       },
     },
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Código interno da condição de pagamento',
+    type: Number,
+  })
   update(
-    @EmpresaId() empresaId: number,
+    @Param('empresaId', ParseIntPipe) empresaId: number,
     @Param('id', ParseIntPipe) id: number,
     @Body() updatePrazoDto: UpdatePrazoDto,
   ) {
@@ -178,8 +185,13 @@ export class PrazoController {
       },
     },
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Código interno da condição de pagamento',
+    type: Number,
+  })
   remove(
-    @EmpresaId() empresaId: number,
+    @Param('empresaId', ParseIntPipe) empresaId: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
     return this.prazoService.remove(empresaId, id);

@@ -10,26 +10,23 @@ import {
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
-  ApiHeader,
   ApiNotFoundResponse,
   ApiOkResponse,
   ApiOperation,
+  ApiParam,
   ApiTags,
 } from '@nestjs/swagger';
-import { EmpresaId } from 'src/common/decorators/empresa-id.decorator';
 import { CadtipopagService } from './cadtipopag.service';
 import { CreateCadtipopagDto } from './dto/create-cadtipopag.dto';
 import { UpdateCadtipopagDto } from './dto/update-cadtipopag.dto';
 
 @ApiTags('Cadtipopag')
-@ApiHeader({
-  name: 'x-empresa-id',
-  description:
-    'Identificador numérico da empresa na qual a operação será executada.',
-  required: true,
-  schema: { type: 'integer', minimum: 1 },
+@ApiParam({
+  name: 'empresaId',
+  description: 'Identificador da empresa',
+  type: Number,
 })
-@Controller('cadtipopag')
+@Controller('empresas/:empresaId/cadtipopag')
 export class CadtipopagController {
   constructor(private readonly cadtipopagService: CadtipopagService) {}
 
@@ -48,7 +45,7 @@ export class CadtipopagController {
     },
   })
   create(
-    @EmpresaId() empresaId: number,
+    @Param('empresaId', ParseIntPipe) empresaId: number,
     @Body() createCadtipopagDto: CreateCadtipopagDto,
   ) {
     return this.cadtipopagService.create(empresaId, createCadtipopagDto);
@@ -72,7 +69,7 @@ export class CadtipopagController {
       },
     },
   })
-  findAll(@EmpresaId() empresaId: number) {
+  findAll(@Param('empresaId', ParseIntPipe) empresaId: number) {
     return this.cadtipopagService.findAll(empresaId);
   }
 
@@ -105,8 +102,13 @@ export class CadtipopagController {
       },
     },
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Código interno do tipo de pagamento',
+    type: Number,
+  })
   findOne(
-    @EmpresaId() empresaId: number,
+    @Param('empresaId', ParseIntPipe) empresaId: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
     return this.cadtipopagService.findOne(empresaId, id);
@@ -140,8 +142,13 @@ export class CadtipopagController {
       },
     },
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Código interno do tipo de pagamento',
+    type: Number,
+  })
   update(
-    @EmpresaId() empresaId: number,
+    @Param('empresaId', ParseIntPipe) empresaId: number,
     @Param('id', ParseIntPipe) id: number,
     @Body() updateCadtipopagDto: UpdateCadtipopagDto,
   ) {
@@ -176,8 +183,13 @@ export class CadtipopagController {
       },
     },
   })
+  @ApiParam({
+    name: 'id',
+    description: 'Código interno do tipo de pagamento',
+    type: Number,
+  })
   remove(
-    @EmpresaId() empresaId: number,
+    @Param('empresaId', ParseIntPipe) empresaId: number,
     @Param('id', ParseIntPipe) id: number,
   ) {
     return this.cadtipopagService.remove(empresaId, id);

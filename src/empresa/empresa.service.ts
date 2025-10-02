@@ -1,4 +1,5 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import { ConflictException, Injectable, NotFoundException } from '@nestjs/common';
+import { Prisma } from '@prisma/client';
 import { Database } from 'src/db/database';
 import { CreateEmpresaDto } from './dto/create-empresa.dto';
 import { UpdateEmpresaDto } from './dto/update-empresa.dto';
@@ -15,8 +16,27 @@ export class EmpresaService {
     return empresa;
   }
 
-  create(createEmpresaDto: CreateEmpresaDto) {
-    return this.db.empresa.create({ data: createEmpresaDto });
+  private handlePrismaError(error: unknown): never {
+    if (
+      error instanceof Prisma.PrismaClientKnownRequestError &&
+      error.code === 'P2002'
+    ) {
+      const target = Array.isArray(error.meta?.target)
+        ? error.meta?.target.join(', ')
+        : error.meta?.target;
+      if (target && String(target).includes('cnpj')) {
+        throw new ConflictException('Já existe uma empresa cadastrada com este CNPJ.');
+      }
+    }
+    throw error;
+  }
+
+  async create(createEmpresaDto: CreateEmpresaDto) {
+    try {
+      return await this.db.empresa.create({ data: createEmpresaDto });
+    } catch (error) {
+      return this.handlePrismaError(error);
+    }
   }
 
   findAll() {
@@ -29,10 +49,14 @@ export class EmpresaService {
 
   async update(id: number, updateEmpresaDto: UpdateEmpresaDto) {
     await this.findOneOrThrow(id);
-    return this.db.empresa.update({
-      where: { id },
-      data: updateEmpresaDto,
-    });
+    try {
+      return await this.db.empresa.update({
+        where: { id },
+        data: updateEmpresaDto,
+      });
+    } catch (error) {
+      return this.handlePrismaError(error);
+    }
   }
 
   async remove(id: number) {
