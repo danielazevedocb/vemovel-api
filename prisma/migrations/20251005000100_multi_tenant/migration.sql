@@ -10,8 +10,6 @@ CREATE TABLE "EMPRESA" (
 CREATE UNIQUE INDEX "EMPRESA_cnpj_key" ON "EMPRESA"("cnpj");
 
 -- Seed default empresa to preserve existing data references
-INSERT INTO "EMPRESA" ("nome") VALUES ('Empresa Padrão');
-
 -- Add tenant column to Prazo (CADTPG)
 ALTER TABLE "CADTPG" ADD COLUMN "empresaId" INTEGER NOT NULL DEFAULT 1;
 
