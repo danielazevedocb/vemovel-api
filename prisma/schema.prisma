@@ -8,20 +8,15 @@ datasource db {
 }
 
 model Prazo {
-  ncond Int @id @default(autoincrement())
-
-  // Condição de pagamento (ex.: "21/28/35", "A VISTA", "ORCAMENTO", "CONSIGNADO", pode conter "<G>")
-  condicao  String
-  acrescimo Float?
-  desconto  Float?
-
-  // Campos opcionais conforme documentação
-  prazoMedio  Int? // exemplo: 28
-  valorMinimo Float?
-  usaCaixa    String? // 'S' ou 'N' (padrão doc). Ex.: "S"
-  modosPagto  String? // Códigos separados por ';' (ex.: "01;03;07")
-
-  // Série de vencimentos (cada um opcional)
+  id           String  @id @default(uuid()) @db.Uuid
+  ncond        Int
+  condicao     String
+  acrescimo    Float?
+  desconto     Float?
+  prazoMedio   Int?
+  valorMinimo  Float?
+  usaCaixa     String?
+  modosPagto   String?
   diasVencto1  Int?
   diasVencto2  Int?
   diasVencto3  Int?
@@ -34,31 +29,29 @@ model Prazo {
   diasVencto10 Int?
   diasVencto11 Int?
   diasVencto12 Int?
-
-  // Tipo opcional (doc diz 1 ou 2)
-  tipo String?
-
-  empresaId Int
-  empresa   Empresa @relation(fields: [empresaId], references: [id])
+  tipo         String?
+  empresaId    Int
+  empresa      Empresa @relation(fields: [empresaId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  @@unique([empresaId, ncond], map: "prazo_empresa_ncond_unique")
   @@index([empresaId], map: "prazo_empresa_idx")
   @@map("CADTPG")
 }
 
 model Cadtipopag {
-  codigo    Int    @id @default(autoincrement())
+  id        String  @id @default(uuid()) @db.Uuid
+  codigo    Int
   descricao String
-
   empresaId Int
   empresa   Empresa @relation(fields: [empresaId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  @@unique([empresaId, descricao], name: "cadtipopag_descricao_empresa_unique")
+  @@unique([empresaId, codigo], map: "cadtipopag_empresa_codigo_unique")
   @@index([empresaId], map: "cadtipopag_empresa_idx")
   @@map("CADTIPOPAG")
 }
@@ -68,11 +61,11 @@ model Empresa {
   nome String
   cnpj String? @unique
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-
   prazos      Prazo[]
   cadtipopags Cadtipopag[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@map("EMPRESA")
 }

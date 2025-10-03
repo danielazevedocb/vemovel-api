@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/swagger';
+import { OmitType, PartialType } from '@nestjs/swagger';
 import { CreatePrazoDto } from './create-prazo.dto';
 
-export class UpdatePrazoDto extends PartialType(CreatePrazoDto) {}
+export class UpdatePrazoDto extends PartialType(
+  OmitType(CreatePrazoDto, ['ncond'] as const),
+) {}

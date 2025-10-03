@@ -1,8 +1,16 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Transform } from 'class-transformer';
-import { IsNotEmpty, IsString } from 'class-validator';
+import { Transform, Type } from 'class-transformer';
+import { IsInt, IsNotEmpty, IsString } from 'class-validator';
 
 export class CreateCadtipopagDto {
+  @ApiProperty({
+    description: 'Código interno do tipo de pagamento',
+    example: 12,
+  })
+  @Type(() => Number)
+  @IsInt()
+  codigo!: number;
+
   @ApiProperty({
     description: 'Descrição do tipo de pagamento',
     example: 'Cartão de crédito',

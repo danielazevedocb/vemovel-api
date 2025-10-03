@@ -10,6 +10,11 @@ import {
 } from 'class-validator';
 
 export class CreatePrazoDto {
+  @ApiProperty({ description: 'Código numérico da condição', example: 101 })
+  @Type(() => Number)
+  @IsInt()
+  ncond!: number;
+
   @ApiProperty({
     description: 'Descrição da condição de pagamento',
     example: 'À vista',
