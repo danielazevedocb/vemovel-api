@@ -32,7 +32,7 @@ export class EmpresaController {
       type: 'object',
       properties: {
         id: { type: 'integer', example: 1 },
-        nome: { type: 'string', example: 'Vemóvel Matriz' },
+        nome: { type: 'string', example: 'Vemovel Matriz' },
         cnpj: { type: 'string', nullable: true, example: '12345678000199' },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
@@ -54,7 +54,7 @@ export class EmpresaController {
         type: 'object',
         properties: {
           id: { type: 'integer', example: 1 },
-          nome: { type: 'string', example: 'Vemóvel Matriz' },
+          nome: { type: 'string', example: 'Vemovel Matriz' },
           cnpj: { type: 'string', nullable: true, example: '12345678000199' },
           createdAt: { type: 'string', format: 'date-time' },
           updatedAt: { type: 'string', format: 'date-time' },
@@ -75,7 +75,7 @@ export class EmpresaController {
       type: 'object',
       properties: {
         id: { type: 'integer', example: 1 },
-        nome: { type: 'string', example: 'Vemóvel Matriz' },
+        nome: { type: 'string', example: 'Vemovel Matriz' },
         cnpj: { type: 'string', nullable: true, example: '12345678000199' },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
@@ -109,7 +109,7 @@ export class EmpresaController {
       type: 'object',
       properties: {
         id: { type: 'integer', example: 1 },
-        nome: { type: 'string', example: 'Vemóvel Matriz' },
+        nome: { type: 'string', example: 'Vemovel Matriz' },
         cnpj: { type: 'string', nullable: true, example: '12345678000199' },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
@@ -146,7 +146,7 @@ export class EmpresaController {
       type: 'object',
       properties: {
         id: { type: 'integer', example: 1 },
-        nome: { type: 'string', example: 'Vemóvel Matriz' },
+        nome: { type: 'string', example: 'Vemovel Matriz' },
         cnpj: { type: 'string', nullable: true, example: '12345678000199' },
         createdAt: { type: 'string', format: 'date-time' },
         updatedAt: { type: 'string', format: 'date-time' },
