@@ -28,7 +28,6 @@ export class EmpresaService {
       const target = Array.isArray(error.meta?.target)
         ? error.meta?.target.join(', ')
         : error.meta?.target;
-      // eslint-disable-next-line @typescript-eslint/no-base-to-string
       if (target && String(target).includes('cnpj')) {
         throw new ConflictException(
           'Já existe uma empresa cadastrada com este CNPJ.',
